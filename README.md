@@ -1,7 +1,7 @@
-cassandra-videodb-sample-schema
+killrvideo-sample-schema
 ===============================
 
-Sample schema to demonstrate the usage and features of CQL.
+Sample schema for Apache Cassandra 2.1, to demonstrate the usage and features of CQL.
 
 To run
 

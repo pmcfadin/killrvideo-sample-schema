@@ -1,3 +1,5 @@
+// Sample schema for Apache Cassandra 2.1
+
 DROP KEYSPACE IF EXISTS killrvideo;
 CREATE KEYSPACE killrvideo WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
 
