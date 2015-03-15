@@ -1,7 +1,7 @@
-cassandra-videodb-sample-schema
+killrvideo-sample-schema
 ===============================
 
-Sample schema to demonstrate the usage and features of CQL.
+Sample schema for Apache Cassandra 2.1, to demonstrate the usage and features of CQL.
 
 To run
 
@@ -37,6 +37,6 @@ video_rating - Example of a counter table. rating_counter stores how many times 
 
 tag_index - Index table to create a lookup of videos based on a unique tag. Tags are added to each video, but each tag may have multiple videos. This table allows that kind of lookup.
 
-comments_by_video and comments_by_user - Two tables that create a many-to-many relationship between users and comments on videos. Each video has many comments. Each user has many comments. "WITH CLUSTERING ORDER BY" clause is used on each table to keep the latest comments at the beginning of the storage row.
+comments_by_video and comments_by_user - Two tables that create two separate, but related, one-to-many relationship between users and comments on videos. Each video has many comments. Each user has many comments. "WITH CLUSTERING ORDER BY" clause is used on each table to keep the latest comments at the beginning of the storage row.
 
 video_event - Example of a time series data model where there can be an unknown amount of records. This example stores each video playback event (START, STOP) with the video timestamp for player advancement and the time of the actual event. From this table we canb derrive where the user left off with the video and where to star tthem again. We can also determine if users are watching an entire video or how many times they viewd a particular video.
