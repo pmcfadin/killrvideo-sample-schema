@@ -1,3 +1,5 @@
+use killrvideo;
+
 //User select statements
 // Select all users. Will be limited to 1000 rows. Rows returned in a random order.
 SELECT *
