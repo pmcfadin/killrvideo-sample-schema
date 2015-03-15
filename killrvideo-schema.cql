@@ -1,3 +1,5 @@
+// Sample schema for Apache Cassandra 2.1
+
 DROP KEYSPACE IF EXISTS killrvideo;
 CREATE KEYSPACE killrvideo WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
 
@@ -23,10 +25,16 @@ CREATE TABLE users (
    PRIMARY KEY (userid)
 );
 
-// Entity table that will store many videos for a unique user
+// User Defined Type
 // Meta data - Height, Width, Bit rate, Encoding
-// Map thumbnails - stop, url
-// Selected thumbnail
+CREATE TYPE video_metadata (
+   height int,
+   width int,
+   video_bit_rate set<text>,
+   encoding text
+);
+
+// Entity table that will store many videos for a unique user
 CREATE TABLE videos (
    videoid uuid,
    userid uuid,
@@ -36,6 +44,7 @@ CREATE TABLE videos (
    location_type int,
    preview_thumbnails map<text,text>,  // <position in video, url of thumbnail>
    tags set<varchar>,
+   metadata set <frozen<video_metadata>>,
    added_date timestamp,
    PRIMARY KEY (videoid)
 );
@@ -120,8 +129,43 @@ CREATE TABLE comments_by_user (
 CREATE TABLE video_event (
    videoid uuid,
    userid uuid,
+   preview_image_location text static,
    event varchar,
    event_timestamp timeuuid,
    video_timestamp bigint,
    PRIMARY KEY ((videoid,userid),event_timestamp,event)
 ) WITH CLUSTERING ORDER BY (event_timestamp DESC,event ASC);
+
+// Pending uploaded videos by id
+CREATE TABLE uploaded_videos (
+    videoid uuid,
+    userid uuid,
+    name text,
+    description text,
+    tags set<text>,
+    added_date timestamp,
+    jobid text,
+    PRIMARY KEY (videoid)
+);
+
+// Same as uploaded_videos just keyed by the encoding job's id
+CREATE TABLE uploaded_videos_by_jobid (
+    jobid text,
+    videoid uuid,
+    userid uuid,
+    name text,
+    description text,
+    tags set<text>,
+    added_date timestamp,
+    PRIMARY KEY (jobid)
+);
+
+// Log of notifications from Azure Media Services encoding jobs (latest updates first)
+CREATE TABLE encoding_job_notifications (
+    jobid text,
+    status_date timestamp,
+    etag text,
+    newstate text,
+    oldstate text,
+    PRIMARY KEY (jobid, status_date, etag)
+) WITH CLUSTERING ORDER BY (status_date DESC, etag ASC);
