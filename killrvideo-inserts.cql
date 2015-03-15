@@ -188,14 +188,14 @@ BEGIN BATCH
    INSERT INTO comments_by_video (videoid, userid, commentid, comment)
    VALUES (99051fe9-6a9c-46c2-b949-38ef78858dd0,d0f60aa8-54a9-4840-b70c-fe562b68842b,now(), 'Worst. Video. Ever.');
    INSERT INTO comments_by_user (videoid, userid, commentid, comment)
-   VALUES (99051fe9-6a9c-46c2-b949-38ef78858dd0,d0f60aa8-54a9-4840-b70c-fe562b68842b,now(), 'Worst. Video. Ever.');
+   VALUES (9761d3d7-7fbd-4269-9988-6cfd4e188678,d0f60aa8-54a9-4840-b70c-fe562b68842b,now(), 'Worst. Video. Ever.');
 APPLY BATCH;
 
 BEGIN BATCH
    INSERT INTO comments_by_video (videoid, userid, commentid, comment)
    VALUES (99051fe9-6a9c-46c2-b949-38ef78858dd0,522b1fe2-2e36-4cef-a667-cd4237d08b89,now(), 'It is amazing');
    INSERT INTO comments_by_user (videoid, userid, commentid, comment)
-   VALUES (99051fe9-6a9c-46c2-b949-38ef78858dd0,522b1fe2-2e36-4cef-a667-cd4237d08b89,now(), 'It is amazing');
+   VALUES (9761d3d7-7fbd-4269-9988-6cfd4e188678,522b1fe2-2e36-4cef-a667-cd4237d08b89,now(), 'It is amazing');
 APPLY BATCH;
 
 // Video events

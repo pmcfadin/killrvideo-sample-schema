@@ -10,13 +10,7 @@ FROM users;
 // Select on a specific user. Result set will contain first and last name
 SELECT firstname, lastname
 FROM users
-WHERE username = 'tcodd';
-
-// Select on a map collection. Only the entire list can be returned.
-SELECT email
-FROM users
-WHERE username = 'tcodd';
-
+WHERE userid = d0f60aa8-54a9-4840-b70c-fe562b68842b;
 
 // Video select statements.
 
@@ -38,49 +32,49 @@ WHERE videoid = 06049cbb-dfed-421f-b889-5f649a0de1ed;
 // Username->video index. With more fields in the PRIMARY KEY declaration,
 // we can do a variety of interesting queries.
 // Lookup video by username
-SELECT videoName,videoID,upload_date
-FROM username_video_index
-WHERE username = 'pmcfadin';
+SELECT name,videoID,added_date
+FROM user_videos
+WHERE userid = 9761d3d7-7fbd-4269-9988-6cfd4e188678;
 
 // Lookup video but ORDER BY the upload date
-SELECT videoName,videoID,upload_date
-FROM username_video_index
-WHERE username = 'pmcfadin'
-ORDER BY upload_date;
+SELECT name,videoID,added_date
+FROM user_videos
+WHERE userid = 9761d3d7-7fbd-4269-9988-6cfd4e188678
+ORDER BY added_date;
 
 // Lookup video and reverse sort upload date but ORDER BY
-SELECT videoName,videoID,upload_date
-FROM username_video_index
-WHERE username = 'pmcfadin'
-ORDER BY upload_date DESC;
+SELECT name,videoID,added_date
+FROM user_videos
+WHERE userid = 9761d3d7-7fbd-4269-9988-6cfd4e188678
+ORDER BY added_date DESC;
 
 // Lookup last video uploaded by reverse sorting upload date and limiting results;
-SELECT videoName,videoID,upload_date
-FROM username_video_index
-WHERE username = 'pmcfadin'
-ORDER BY upload_date DESC
+SELECT name,videoID,added_date
+FROM user_videos
+WHERE userid = 9761d3d7-7fbd-4269-9988-6cfd4e188678
+ORDER BY added_date DESC
 LIMIT 1;
 
 // Lookup video by username and upload date greater than June 6, 2013
-SELECT videoName,videoID,upload_date
-FROM username_video_index
-WHERE username = 'pmcfadin'
-AND upload_date > '2013-06-01';
+SELECT name,videoID,added_date
+FROM user_videos
+WHERE userid = 9761d3d7-7fbd-4269-9988-6cfd4e188678
+AND added_date > '2013-06-01';
 
 // Lookup video by username and upload date between May 15, 2013 and July 1, 2013
-SELECT videoName,videoID,upload_date
-FROM username_video_index
-WHERE username = 'pmcfadin'
-AND upload_date > '2013-05-15'
-AND upload_date < '2013-07-01';
+SELECT name,videoID,added_date
+FROM user_videos
+WHERE userid = 9761d3d7-7fbd-4269-9988-6cfd4e188678
+AND added_date > '2013-05-15'
+AND added_date < '2013-07-01';
 
 // Lookup video by username and upload date between May 15, 2013 and July 1, 2013 and order results
-SELECT videoName,videoID,upload_date
-FROM username_video_index
-WHERE username = 'pmcfadin'
-AND upload_date > '2013-05-15'
-AND upload_date < '2013-07-01'
-ORDER BY upload_date;
+SELECT name,videoID,added_date
+FROM user_videos
+WHERE userid = 9761d3d7-7fbd-4269-9988-6cfd4e188678
+AND added_date > '2013-05-15'
+AND added_date < '2013-07-01'
+ORDER BY added_date;
 
 // Video rating selects
 // Select counter fields. Divide rating_total by rating_counter to get average rating.
@@ -90,41 +84,40 @@ WHERE videoId = 99051fe9-6a9c-46c2-b949-38ef78858dd0;
 
 // Tag index
 // Find a list of videos by tag
-SELECT videoID, tag_ts
-FROM tag_index
+SELECT videoID, tagged_date
+FROM videos_by_tag
 WHERE tag = 'lol';
-
 
 // Video comments. We have stored this many-to-many in two different fields.
 // We will query on either table based on which view we want.
 // From the side of comments by video
 // All comments for a video
-SELECT username, comment, dateOf(comment_ts)
+SELECT userid, comment, dateOf(commentid)
 FROM comments_by_video
-WHERE videoID = 99051fe9-6a9c-46c2-b949-38ef78858dd0;
+WHERE videoid = 99051fe9-6a9c-46c2-b949-38ef78858dd0;
 
 // Last comment made on a video
-SELECT username, comment, dateOf(comment_ts)
-FROM comments_by_video
-WHERE videoID = 99051fe9-6a9c-46c2-b949-38ef78858dd0
+SELECT userid, comment, dateOf(commentid)
+FROM comments_by_user
+WHERE userid = d0f60aa8-54a9-4840-b70c-fe562b68842b
 LIMIT 1;
 
-// From the side of comments by username
+// From the side of comments by userid
 // Specific comments for a video by one user
-SELECT username, comment, dateOf(comment_ts)
+SELECT userid, comment, dateOf(commentid)
 FROM comments_by_user
-WHERE username = 'cdate';
+WHERE userid = d0f60aa8-54a9-4840-b70c-fe562b68842b;
 
 // Video event. Time series
 // Select all events for a particular video and user combination
 SELECT dateOf(event_timestamp), event, video_timestamp
 FROM video_event
 WHERE videoID = 99051fe9-6a9c-46c2-b949-38ef78858dd0
-AND username= 'tcodd';
+AND userid= d0f60aa8-54a9-4840-b70c-fe562b68842b;
 
 // Get the last 5 video events
 SELECT dateOf(event_timestamp), event, video_timestamp
 FROM video_event
 WHERE videoID = 99051fe9-6a9c-46c2-b949-38ef78858dd0
-AND username= 'tcodd'
+AND userid= d0f60aa8-54a9-4840-b70c-fe562b68842b
 limit 5;
