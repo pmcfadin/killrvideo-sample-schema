@@ -181,7 +181,7 @@ VALUES ('instruction',49f64d40-7d89-4890-b910-dbf923563a33, '2013-06-11 11:00:00
 
 // Video Comments. One for each side of the view.
 // Insert in pairs
-// This is done using the batch command to group our operations.
+// This is done using the logged batch command to group our operations to ensure both actions are eventually taken. 
 BEGIN BATCH
    INSERT INTO comments_by_video (videoid, userid, commentid, comment)
    VALUES (99051fe9-6a9c-46c2-b949-38ef78858dd0,d0f60aa8-54a9-4840-b70c-fe562b68842b,now(), 'Worst. Video. Ever.')
