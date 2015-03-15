@@ -1,4 +1,4 @@
-// Sample queries for Apache Cassandra 2.1 version of schama
+// Sample queries for Apache Cassandra 2.1 version of schema
 use killrvideo;
 
 //User select statements
