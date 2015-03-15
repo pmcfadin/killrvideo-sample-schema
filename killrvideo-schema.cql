@@ -1,4 +1,4 @@
-// Sample schema for Apache Cassandra 2.1
+// Sample schema for Apache Cassandra 2.0
 
 // Drop and recreate the keyspace
 DROP KEYSPACE IF EXISTS killrvideo;

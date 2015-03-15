@@ -1,4 +1,4 @@
-// Sample data inserts for Apache Cassandra 2.1 version of schema
+// Sample data inserts for Apache Cassandra 2.0 version of schema
 
 use killrvideo;
 
