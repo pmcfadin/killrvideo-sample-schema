@@ -1,7 +1,8 @@
-// Sample schema for Apache Cassandra 2.1
+// Sample schema for Apache Cassandra
 
+// IF EXISTS added for Cassandra 2.1
 DROP KEYSPACE IF EXISTS killrvideo;
-CREATE KEYSPACE killrvideo WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
+CREATE KEYSPACE killrvideo WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 3 };
 
 use killrvideo;
 
@@ -48,6 +49,12 @@ CREATE TABLE videos (
    added_date timestamp,
    PRIMARY KEY (videoid)
 );
+
+CREATE MATERIALIZED VIEW videos_by_location
+SELECT userid, added_date, videoid, location
+FROM videos
+WHERE videoId IS NOT NULL AND location IS NOT NULL
+PRIMARY KEY(location, videoid);
 
 // One-to-many from the user point of view
 // Also know as a lookup table
