@@ -1,6 +1,7 @@
 // Sample schema for Apache Cassandra
 
 // IF EXISTS added for Cassandra 2.1
+// CQL 3.1.0
 DROP KEYSPACE IF EXISTS killrvideo;
 CREATE KEYSPACE killrvideo WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 3 };
 
@@ -26,7 +27,36 @@ CREATE TABLE users (
    PRIMARY KEY (userid)
 );
 
-// User Defined Type
+// CQL
+// Create an index on first name in users table.
+// NonTokenizingAnalyzer is used for only match equality
+// making it case_sensitive false eliminates any normalization problems.
+CREATE CUSTOM INDEX ON users (firstname)
+USING 'org.apache.cassandra.index.sasi.SASIIndex'
+WITH OPTIONS = {
+  'analyzer_class':
+  'org.apache.cassandra.index.sasi.analyzer.NonTokenizingAnalyzer',
+  'case_sensitive': 'false'
+};
+
+// SASI Index on lastname supports a LIKE '%term%' query
+// with the mode: CONTAINS
+CREATE CUSTOM INDEX ON users (lastname)
+USING 'org.apache.cassandra.index.sasi.SASIIndex'
+WITH OPTIONS = {'mode': 'CONTAINS'};
+
+// SASI Index on email is for the same type of query as lastname
+CREATE CUSTOM INDEX ON users (email)
+USING 'org.apache.cassandra.index.sasi.SASIIndex'
+WITH OPTIONS = {'mode': 'CONTAINS'};
+
+// SASI Index using mode SPARSE is good for unique, dense number ranges
+// and is best for range queries on timestamps
+CREATE CUSTOM INDEX ON users (created_date)
+USING 'org.apache.cassandra.index.sasi.SASIIndex'
+WITH OPTIONS = {'mode': 'SPARSE'};
+
+// User Defined Type introduced in CQL 3.2 spec
 // Meta data - Height, Width, Bit rate, Encoding
 CREATE TYPE video_metadata (
    height int,
@@ -50,8 +80,13 @@ CREATE TABLE videos (
    PRIMARY KEY (videoid)
 );
 
+// CQL 3.2 spec included secondary indexes of collections
+// These are not for speed but convenience
+CREATE INDEX tags_idx ON videos(ENTRIES(tags)); 
+
+// CQL 3.4 spec introduced MATERIALIZED VIEWS
 CREATE MATERIALIZED VIEW videos_by_location
-SELECT userid, added_date, videoid, location
+AS SELECT userid, added_date, videoid, location
 FROM videos
 WHERE videoId IS NOT NULL AND location IS NOT NULL
 PRIMARY KEY(location, videoid);
@@ -85,6 +120,14 @@ CREATE TABLE video_rating (
    rating_total counter,
    PRIMARY KEY (videoid)
 );
+
+// CQL 3.3 adds user defined functions
+// This function takes the counters in the video rating table and averages them
+// by dividing rating total by rating counter.
+CREATE OR REPLACE FUNCTION avg_rating (rating_counter counter, rating_total counter)
+CALLED ON NULL INPUT
+RETURNS double
+LANGUAGE java AS 'return Double.valueOf(rating_total.doubleValue()/rating_counter.doubleValue());';
 
 // Video ratings by user (to try and mitigate voting multiple times)
 CREATE TABLE video_ratings_by_user (
